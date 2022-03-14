@@ -11,16 +11,28 @@ const common_1 = require("@nestjs/common");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const config_1 = require("@nestjs/config");
-console.log('process.env.NODE_ENV  ');
-console.log(process.env.NODE_ENV);
+const typeorm_1 = require("@nestjs/typeorm");
+const user_module_1 = require("./user/user.module");
+const user_entity_1 = require("./user/entities/user.entity");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
     (0, common_1.Module)({
         imports: [config_1.ConfigModule.forRoot({
                 isGlobal: true,
-                envFilePath: '.env',
-            })],
+                envFilePath: process.env.NODE_ENV == 'dev' ? '.env.dev' : '.env.prod',
+            }),
+            typeorm_1.TypeOrmModule.forRoot({
+                type: 'mysql',
+                host: process.env.NODE_ENV == 'dev' ? 'localhost' : 'localhost',
+                port: process.env.NODE_ENV == 'dev' ? 3306 : 3306,
+                username: process.env.NODE_ENV == 'dev' ? 'root' : 'root',
+                password: process.env.NODE_ENV == 'dev' ? 'clzls5akfl!Q' : 'clzls5akfl!Q',
+                database: process.env.NODE_ENV == 'dev' ? 'sample_nest' : 'sample_nest',
+                entities: [user_entity_1.User],
+                synchronize: true,
+            }),
+            user_module_1.UserModule],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
     })
