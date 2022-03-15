@@ -7,21 +7,29 @@ import {
   Param,
   Delete,
   Res,
+  Req,
   HttpStatus,
 } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
-import { Response } from "express";
+import { Request, Response } from "express";
 
-@Controller("user")
+@Controller("api/v1/user")
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  create(@Body() body: any) {
+    console.log(body);
+    return this.userService.create(body);
   }
+  
+  // @Post()
+  // create(@Req() request: Request) {
+  //   console.log(request.);
+  //   return this.userService.create(request.body);
+  // }
 
   @Get()
   async findAll(@Res() res: Response) {
